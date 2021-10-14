@@ -1,14 +1,10 @@
-
-    
-
-
 $(function () {
 	nivi.init();
 	var head  = document.getElementsByTagName('head')[0];
     var link  = document.createElement('link');
     link.rel  = 'stylesheet';
     link.type = 'text/css';
-    link.href = 'https://iskraa.ru/nivi/nivi.css';
+    link.href = 'https://mapny.ru/nivi/nivi.css?v=5';
     link.media = 'all';
     head.appendChild(link);
 });
@@ -128,7 +124,7 @@ var nivi = {
 		}
 		var html =
 			'<div class="nivi-bar">' +
-				'<div></div>' +
+				'<div class="nivi-empty"></div>' +
 				'<fieldset class="nivi-size-section">' +
 					'<legend>Размер</legend>' +
 					'<div class="nivi-size" data-classname="nivi-normal" data-title="Нормальный"></div>' +
@@ -188,15 +184,56 @@ var nivi = {
 				'</fieldset>' +
 				*/
 				'<ul class="nivi-control"><li class="nivi-close"></li><li class="nivi-hide"></li></ul>' +
-			'</div>';
+			'</div>' +
+			'<ul class="nivi-settings">' +
+				'<li class="nivi-compact">' +
+						'<input type="checkbox" id="nivi-compact" name="nivi-compact" value="nivi-compact">' +
+						'<label for="nivi-compact">Компактный</label>' +
+				'</li>' +
+				'<li class="nivi-style-default">' +
+						'<input type="radio" id="nivi-style-default" name="nivi-style" value="nivi-style-default" checked="">' +
+						'<label for="nivi-style-default">Скруглённый</label>' +
+				'</li>' +
+				'<li class="nivi-style-circle">' +
+						'<input type="radio" id="nivi-style-circle" name="nivi-style" value="nivi-style-circle">' +
+						'<label for="nivi-style-circle">Круглый</label>' +
+				'</li>' +
+				'<li class="nivi-style-square">' +
+						'<input type="radio" id="nivi-style-square" name="nivi-style" value="nivi-style-square">' +
+						'<label for="nivi-style-square">Квадратный</label>' +
+				'</li>' +
+				'<li class="nivi-position-top">' +
+						'<input type="radio" id="nivi-position-top" name="nivi-position" value="nivi-position-top" checked="">' +
+						'<label for="nivi-position-top">Сверху</label>' +
+				'</li>' +
+				'<li class="nivi-position-right">' +
+						'<input type="radio" id="nivi-position-right" name="nivi-position" value="nivi-position-right">' +
+						'<label for="nivi-position-right">Справа</label>' +
+				'</li>' +
+				'<li class="nivi-position-left">' +
+						'<input type="radio" id="nivi-position-left" name="nivi-position" value="nivi-position-left">' +
+						'<label for="nivi-position-left">Слева</label>' +
+				'</li>' +
+			'</ul>';
 		$('body').prepend(html);
 		$('.nivi-speech-play').on("click", function () {
 			$(this).toggleClass('active');
-			$("p, h1, h2, h3, h4, h5").before("<button class='nivi-speak'></button>")
+			$("p, h1, h2, h3, h4, h5").before("<button class='nivi-speak'></button>");
+			
+			setTimeout(function(){
+				$('.nivi-speak').each(function (index, value) { 
+					$(this).attr('id', 'nivi-speak-item-' + index)
+				});
+			}, 500);
+			
+			setTimeout(function(){
+				$('#nivi-speak-item-1').trigger('click');
+			}, 1000);
+			
 		});
 
 		if(nivi.slideDownOnInit) {
-			$('.nivi-bar, .nivi-space').hide().slideDown();
+			$('.nivi-bar').hide().slideDown();
 		}
 		$('html').addClass('nivi-view nivi-normal nivi-achromatic');
 
@@ -208,9 +245,40 @@ var nivi = {
 		});
 		$.cookie('nivi_view', 'on', {expires: 90, path: '/'});
 		$(window).resize();
+
+		$('.nivi-settings li').click(function () {
+			$('html').removeClass('nivi-style-default nivi-style-circle nivi-style-square')
+			if ($('#nivi-style-default').is(':checked')) {
+				$('html').addClass('nivi-style-default');
+			}
+			else
+			if ($('#nivi-style-circle').is(':checked')) {
+				$('html').addClass('nivi-style-circle');
+			}
+			else
+			if ($('#nivi-style-square').is(':checked')) {
+				$('html').addClass('nivi-style-square');
+			}
+			$('html').removeClass('nivi-position-top nivi-position-right nivi-position-left')
+			if ($('#nivi-position-top').is(':checked')) {
+				$('html').addClass('nivi-position-top');
+			}
+			else
+			if ($('#nivi-position-right').is(':checked')) {
+				$('html').addClass('nivi-position-right');
+			}
+			else
+			if ($('#nivi-position-left').is(':checked')) {
+				$('html').addClass('nivi-position-left');
+			}
+			$('html').removeClass('nivi-compact')
+			if ($('#nivi-compact').is(':checked')) {
+				$('html').addClass('nivi-compact');
+			} else $('html').removeClass('nivi-compact');
+		});
 	},
 	switchToNormal: function () {
-		$('.nivi-bar, .nivi-space').slideUp(function () {
+		$('.nivi-bar').slideUp(function () {
 			$(this).remove();
 			$.cookie('nivi_view', 'off', {expires: -1, path: '/'});
 			window.location.reload();
@@ -237,7 +305,7 @@ speechSynthesis.onvoiceschanged = () => {
   voices = speechSynthesis.getVoices();
   defaultVoice = voices.find((voice) => voice.name === "Google русский");
 
-  wrapper.addEventListener("click", handleClick);
+  wrni.addEventListener("click", handleClick);
   window.addEventListener("keydown", handleKeydown);
 };
 
@@ -287,8 +355,8 @@ function getUtterance(target, text) {
   U.voice = defaultVoice;
   U.lang = defaultVoice.lang;
   U.volume = 1;
-  U.rate = 0.9;
-  U.pitch = 1.1;
+  U.rate = 1;
+  U.pitch = 1;
 
   U.onstart = () => {
     console.log("Started");
